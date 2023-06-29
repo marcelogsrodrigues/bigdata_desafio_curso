@@ -42,12 +42,6 @@ Escopo: Ingestão de dados, processamento, modelagem dimensional, geração de r
 . Configurando git e docker
 
 ## _Etapa 1: Enviar os arquivos para o HDFS_
-![docker-desafio-curso-01A-enviar-arquivo-hdfs-2023-06-28 16-52-30](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/48965088-a20a-4cf2-8730-46a914b73588)
-![docker-desafio-curso-01A-enviar-arquivo-hdfs-2023-06-28 17-20-00](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/648a0dde-9e83-41e0-b01d-687413591e55)
-![docker-desafio-curso-01A-enviar-arquivo-hdfs-2023-06-28 17-35-00](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/f86e48f2-7233-4b85-ab37-d895df327b2c)
-
-.
-![docker-desafio-curso-01B-enviar-arquivo-hdfs-2023-06-28 17-40-00](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/cd039a92-7587-4e55-b1d4-2dfd41d9834a)
 ![docker-desafio-curso-01B-enviar-arquivo-hdfs-2023-06-28 17-43-20](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/7868d90e-c87f-4e00-9deb-890f705b19d4)
 
 .
