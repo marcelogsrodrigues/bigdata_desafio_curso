@@ -2,7 +2,7 @@
 --TAB_RAW_DIVISAO="divisao"| TABELA_DIVISAO="TBL_DIVISAO"
 
 -- Tabela Externa 
-CREATE EXTERNAL TABLE IF NOT EXISTS ${TARGET_DATABASE}.divisao
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso_stg.divisao (
 	divisao string,	
 	divisaoname string
 )
@@ -15,7 +15,7 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 
 -- Tabela Gerenciada particionada 
-CREATE TABLE IF NOT EXISTS ${TARGET_DATABASE}.tbl_divisao (
+CREATE TABLE IF NOT EXISTS desafio_curso.tbl_divisao (
 	divisao string,	
 	divisaoname string
 )
@@ -30,11 +30,11 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 
 -- Carga 
 INSERT OVERWRITE TABLE 
-  ${TARGET_DATABASE}.tbl_divisao
+  desafio_curso.tbl_divisao
 PARTITION(DT_FOTO)
 SELECT
   divisao string,	
   divisaoname string,
-  ${PARTICAO} as DT_FOTO
-FROM ${TARGET_DATABASE}.divisao
+  current_date as DT_FOTO
+FROM desafio_curso_stg.divisao
 ;

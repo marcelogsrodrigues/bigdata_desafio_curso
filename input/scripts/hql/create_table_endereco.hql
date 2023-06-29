@@ -2,8 +2,8 @@
 --TAB_RAW_ENDERECO="endereco" | TABELA_ENDERECO="TBL_ENDERECO"
 
 -- Tabela Externa 
-CREATE EXTERNAL TABLE IF NOT EXISTS ${TARGET_DATABASE}.endereco (
-	addressNumber	
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso_stg.endereco (
+	addressNumber string,	
 	city string,	
 	country string,	
 	customeraddress1 string,	
@@ -22,8 +22,8 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 
 -- Tabela Gerenciada particionada 
-CREATE TABLE IF NOT EXISTS ${TARGET_DATABASE}.tbl_endereco(
-	addressNumber	
+CREATE TABLE IF NOT EXISTS desafio_curso.tbl_endereco(
+	addressNumber string,
 	city string,	
 	country string,	
 	customeraddress1 string,	
@@ -44,10 +44,10 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 
 -- Carga 
 INSERT OVERWRITE TABLE 
-  ${TARGET_DATABASE}.tbl_endereco
+  desafio_curso.tbl_endereco
 PARTITION(DT_FOTO)
 SELECT
-	addressNumber	
+	addressNumber string,	
 	city string,	
 	country string,	
 	customeraddress1 string,	
@@ -56,6 +56,6 @@ SELECT
 	customeraddress4 string,	
 	state string,	
 	zipCode string,
-  ${PARTICAO} as DT_FOTO
-FROM ${TARGET_DATABASE}.endereco
+  current_date as DT_FOTO
+FROM desafio_curso_stg.endereco
 ;

@@ -2,7 +2,7 @@
 --TAB_RAW_CLIENTE="clientes" | TABELA_CLIENTE="TBL_CLIENTES"
 
 -- Tabela Externa 
-CREATE EXTERNAL TABLE IF NOT EXISTS ${TARGET_DATABASE}.clientes (
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso_stg.clientes (
 	addressnumber string,	
 	businessfamily string,	
 	businessunit string,	
@@ -25,7 +25,7 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 
 -- Tabela Gerenciada particionada 
-CREATE TABLE IF NOT EXISTS ${TARGET_DATABASE}.tbl_clientes(
+CREATE TABLE IF NOT EXISTS desafio_curso.tbl_clientes(
 	addressnumber string,	
 	businessfamily string,	
 	businessunit string,	
@@ -50,7 +50,7 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 
 -- Carga 
 INSERT OVERWRITE TABLE 
-  ${TARGET_DATABASE}.tbl_clientes
+  desafio_curso.tbl_clientes
 PARTITION(DT_FOTO)
 SELECT
 	addressnumber string,	
@@ -65,6 +65,6 @@ SELECT
 	regioncode string,	
 	regionalsalesmgr string,	
 	searchtype string,
-       ${PARTICAO} as DT_FOTO
-FROM ${TARGET_DATABASE}.clientes
+    current_date as DT_FOTO
+FROM desafio_curso_stg.clientes
 ;

@@ -2,7 +2,7 @@
 --TAB_RAW_REGIAO="regiao"| TABELA_REGIAO="tbl_regiao"
 
 -- Tabela Externa 
-CREATE EXTERNAL TABLE IF NOT EXISTS ${TARGET_DATABASE}.regiao (
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso_stg.regiao (
 	regiaocode string,	
 	regiaoname string
 )
@@ -15,7 +15,7 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 
 -- Tabela Gerenciada particionada 
-CREATE TABLE IF NOT EXISTS ${TARGET_DATABASE}.tbl_regiao(
+CREATE TABLE IF NOT EXISTS desafio_curso.tbl_regiao(
 	regiaocode string,	
 	regiaoname string
 )
@@ -30,11 +30,11 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 
 -- Carga 
 INSERT OVERWRITE TABLE 
-  ${TARGET_DATABASE}.tbl_regiao
+  desafio_curso.tbl_regiao
 PARTITION(DT_FOTO)
 SELECT
   regiaocode string,	
   regiaoname string,
-  ${PARTICAO} as DT_FOTO
-FROM ${TARGET_DATABASE}.regiao
+  current_date as DT_FOTO
+FROM desafio_curso_stg.regiao
 ;

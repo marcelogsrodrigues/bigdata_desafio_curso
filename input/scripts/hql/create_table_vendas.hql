@@ -2,7 +2,7 @@
 --TAB_RAW_VENDA="vendas" | TABELA_VENDA="tbl_vendas"
 
 -- Tabela Externa 
-CREATE EXTERNAL TABLE IF NOT EXISTS ${TARGET_DATABASE}.vendas (
+CREATE EXTERNAL TABLE IF NOT EXISTS desafio_curso_stg.vendas (
 	ActualDeliveryDate string,	
 	CustomerKey string,	
 	DateKey string,		
@@ -23,7 +23,8 @@ CREATE EXTERNAL TABLE IF NOT EXISTS ${TARGET_DATABASE}.vendas (
 	SalesPrice string,	
 	SalesQuantity string,	
 	SalesRep string,	
-	U_M col_extra_1 string,	
+	U_M string,
+	col_extra_1 string,	
 	col_extra_2 string, 
 	col_extra_3 string, 
 	col_extra_4 string, 
@@ -39,7 +40,7 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 
 -- Tabela Gerenciada particionada 
-CREATE TABLE IF NOT EXISTS ${TARGET_DATABASE}.tbl_vendas(
+CREATE TABLE IF NOT EXISTS desafio_curso.tbl_vendas(
 	ActualDeliveryDate string,	
 	CustomerKey string,	
 	DateKey string,		
@@ -60,7 +61,8 @@ CREATE TABLE IF NOT EXISTS ${TARGET_DATABASE}.tbl_vendas(
 	SalesPrice string,	
 	SalesQuantity string,	
 	SalesRep string,	
-	U_M col_extra_1 string,	
+	U_M string,	
+	col_extra_1 string,	
 	col_extra_2 string, 
 	col_extra_3 string, 
 	col_extra_4 string, 
@@ -78,7 +80,7 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 
 -- Carga 
 INSERT OVERWRITE TABLE 
-  ${TARGET_DATABASE}.tbl_vendas
+  desafio_curso.tbl_vendas
 PARTITION(DT_FOTO)
 SELECT
 	ActualDeliveryDate string,	
@@ -101,12 +103,13 @@ SELECT
 	SalesPrice string,	
 	SalesQuantity string,	
 	SalesRep string,	
-	U_M col_extra_1 string,	
+	U_M string,
+	col_extra_1 string,	
 	col_extra_2 string, 
 	col_extra_3 string, 
 	col_extra_4 string, 
 	col_extra_5 string, 
-	col_extra_6 string
-       ${PARTICAO} as DT_FOTO
-FROM ${TARGET_DATABASE}.vendas
+	col_extra_6 string,
+    current_date as DT_FOTO
+FROM desafio_curso_stg.vendas
 ;

@@ -12,24 +12,42 @@ spark = SparkSession.builder.master("local[*]")\
     .getOrCreate()
 
 # Criando dataframes do Hive
-df_cliente = spark.sql("select * from desafio_curso_stg.tbl_clientes")
-df_endereco = spark.sql("select * from desafio_curso_stg.tbl_endereco")
-df_regiao = spark.sql("select * from desafio_curso_stg.tbl_regiao")
-df_divisao = spark.sql("select * from desafio_curso_stg.tbl_divisao")
-df_venda = spark.sql("select * from desafio_curso_stg.tbl_vendas")
+
+# Criando dataframe divisao
+df_divisao = spark.sql("select * from desafio_curso.tbl_divisao")
+
+# Criando dataframe regiao
+df_regiao = spark.sql("select * from desafio_curso.tbl_regiao")
+
+# Criando dataframe cliente
+df_cliente = spark.sql("select * from desafio_curso.tbl_clientes")
+
+# Criando dataframe endereco
+df_endereco = spark.sql("select * from desafio_curso.tbl_endereco")
+
+# Criando dataframe vendas
+df_venda = spark.sql("select * from desafio_curso.tbl_vendas")
+
+#verifica estrutura
+df_cliente.printSchema()
+df_venda.printSchema()   
+
+#teste
+df_venda.count()
 
 
-# Espaço para tratar e juntar os campos e a criação do modelo dimensional
+# Preparar criacao do modelo dimensional
+df_divisao.createOrReplaceTempView('divisao')
+df_regiao.createOrReplaceTempView('regiao')
 df_cliente.createOrReplaceTempView('cliente')
 df_endereco.createOrReplaceTempView('endereco')
-df_regiao.createOrReplaceTempView('regiao')
-df_divisao.createOrReplaceTempView('divisao')
 df_venda.createOrReplaceTempView('venda')
 
 
+#Esboco do modelo
 sql = '''
 select 
-    #--venda--
+    --#--venda--
     vd.CustomerKey      id_cliente_venda,    #PK
     vd.InvoiceNumber    id_fatura_venda,     #PK
     vd.OrderNumber      id_ordem_venda,      #PK
@@ -42,18 +60,18 @@ select
     vd.DiscountAmount   vr_desconto,
     SalesAmountBasedListPrice vr_venda_total, --#valor venda total final acumulado    
     vd.InvoiceDate      dt_venda,
-    #--cliente--        --#cl.CustomerKey <-> vd.CustomerKey
+    --#--cliente--        --#cl.CustomerKey <-> vd.CustomerKey
     cl.CustomerKey      id_cliente,     
     cl.Customer         nm_cliente,
-    #--endereco         --#ed.AddressNumber <-> cl.AddressNumber
+    --#--endereco         --#ed.AddressNumber <-> cl.AddressNumber
     ed.AddressNumber    id_endereco,   
     ed.City             nm_cidade, 
     ed.State            uf_estado,    
     ed.Country          sg_pais,
-    #--regiao           --#rg.RegionCode <-> cl.RegionCode
+    --#--regiao           --#rg.RegionCode <-> cl.RegionCode
     rg.RegionCode       id_regiao,     
     rg.RegionName       ds_regiao,
-    #--divisao          --#dv.Division <-> cl.Division
+    --#--divisao          --#dv.Division <-> cl.Division
     dv.Division         id_divisao,    
     dv.DivisionName     ds_divisao
  from 
@@ -68,6 +86,42 @@ left join
     divisao  as dv on dv.Division = cl.Division    
 '''    
 
+#Query final
+sql = '''
+select distinct
+    vd.customerkey      id_cliente_venda,    
+    vd.invoicenumber    id_fatura_venda,    
+    vd.ordernumber      id_ordem_venda,      
+    vd.itemnumber       id_item_venda,
+    vd.item             ds_item_venda, 
+    vd.salesquantity    qt_unidade_vendida,
+    vd.salesprice       vr_unidade_venda,     
+    vd.salesamount      vr_unidade_somada,    
+    vd.salescostamount  vr_custo_venda,
+    vd.discountamount   vr_desconto,
+    vd.salesamountbasedonlistprice vr_venda_total,     
+    vd.invoicedate      dt_venda,
+    cl.customerkey      id_cliente,     
+    cl.customername     nm_cliente,
+    ed.addressnumber    id_endereco,   
+    ed.city             nm_cidade, 
+    ed.state            uf_estado,    
+    ed.country          sg_pais,
+    rg.regiaocode       id_regiao,     
+    rg.regiaoname       ds_regiao,
+    dv.divisao          id_divisao,    
+    dv.divisaoname      ds_divisao
+from 
+    venda as vd 
+inner join     
+    cliente as cl on cl.customerkey == vd.customerkey
+inner join 
+    endereco as ed on ed.addressnumber == cl.addressnumber
+left join 
+    divisao as dv on dv.divisao == cl.division  
+left join 
+    regiao as rg on rg.regiaocode == cl.regioncode     
+'''  
 
 # Criação da STAGE
 df_stage = spark.sql(sql)
@@ -83,8 +137,7 @@ df_stage = (df_stage
 # Criação das Chaves do Modelo
 df_stage = df_stage.withColumn("DW_CLIENTE", sha2(concat_ws("", df_stage.id_cliente, df_stage.nm_cliente), 256))
 df_stage = df_stage.withColumn("DW_TEMPO", sha2(concat_ws("", df_stage.dt_venda, df_stage.Ano, df_stage.Mes, df_stage.Dia), 256))
-df_stage = df_stage.withColumn("DW_LOCALIDADE", sha2(concat_ws("", id_endereco, df_stage.ds_cidade, df_stage.uf_estado, df_stage.ds_pais ), 256))
-#df_stage = df_stage.withColumn("DW_LOCALIDADE", sha2(concat_ws("", df_stage.id_estado, df_stage.id_cidade, df_stage.ds_estado, df_stage.ds_cidade), 256))
+df_stage = df_stage.withColumn("DW_LOCALIDADE", sha2(concat_ws("", df_stage.id_endereco, df_stage.nm_cidade, df_stage.uf_estado, df_stage.sg_pais ), 256))
 
 df_stage.createOrReplaceTempView('stage')
 
@@ -114,9 +167,9 @@ dim_localidade = spark.sql('''
     SELECT DISTINCT
         DW_LOCALIDADE,
         id_endereco,
-        ds_cidade,
+        nm_cidade,
         uf_estado,
-        ds_pais        
+        sg_pais        
     FROM stage    
 ''')
 
@@ -126,7 +179,7 @@ ft_vendas = spark.sql('''
         DW_CLIENTE,
         DW_TEMPO,
         DW_LOCALIDADE,        
-        sum(vr_venda) as vr_total_venda
+        sum(vr_venda_total) as vr_total_venda
     FROM stage
     group by 
         DW_CLIENTE,
@@ -136,9 +189,9 @@ ft_vendas = spark.sql('''
 
 # função para salvar os dados
 def salvar_df(df, file):
-    output = "/gold/" + file
+    output = "/input/gold/" + file
     erase = "hdfs dfs -rm " + output + "/*"
-    rename = "hdfs dfs -get /datalake/gold/"+file+"/part-* /gold/"+file+".csv"
+    rename = "hdfs dfs -get /datalake/gold/"+file+"/part-* /input/gold/"+file+".csv"
     print(rename)
     
     
@@ -152,6 +205,7 @@ def salvar_df(df, file):
     os.system(erase)
     os.system(rename)
 
+# Executar funcao para exportar os dados para pasta /gold
 salvar_df(ft_vendas, 'ft_vendas')
 salvar_df(dim_cliente, 'dim_cliente')
 salvar_df(dim_tempo, 'dim_tempo')

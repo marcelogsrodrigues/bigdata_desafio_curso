@@ -9,7 +9,9 @@ PARTICAO="$(date --date="-0 day" "+%Y%m%d")"
 HDFS_DIR_RAW="/datalake/raw"
 
 #Tabelas(raw)
-TABLES=("clientes" "vendas" "endereco" "regiao" "divisao")
+#TABLES=("divisao" "regiao" "clientes" "endereco" "vendas")
+TABLES=("vendas")
+
 TAB_RAW_CLIENTE="clientes"
 TAB_RAW_VENDA="vendas"
 TAB_RAW_ENDERECO="endereco"
@@ -17,16 +19,16 @@ TAB_RAW_REGIAO="regiao"
 TAB_RAW_DIVISAO="divisao"
 
 
-##Configuracao hive
 #Database
-TARGET_DATABASE="DESAFIO_CURSO"
+TARGET_STAGE_DATABASE="desafio_curso_stg"
+TARGET_DATABASE="desafio_curso"
 
 #Tabelas(hive)
-TABELA_CLIENTE="TBL_CLIENTES"
-TABELA_VENDA="TBL_VENDAS"
-TABELA_ENDERECO="TBL_ENDERECO"
-TABELA_REGIAO="TBL_REGIAO"
-TABELA_DIVISAO="TBL_DIVISAO"
+TABELA_CLIENTE="tbl_clientes"
+TABELA_VENDA="tbl_vendas"
+TABELA_ENDERECO="tbl_endereco"
+TABELA_REGIAO="tbl_regiao"
+TABELA_DIVISAO="tbl_divisao"
 
         
         
