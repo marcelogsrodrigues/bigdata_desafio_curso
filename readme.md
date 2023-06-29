@@ -1,58 +1,33 @@
-DESAFIO BIG DATA/MODELAGEM
+ 
+DESAFIO BIG DATA
+---
+Área de negócio: Vendas.
+Proposta: Prover dados que permita a geração de relatorios gerencias.
 
-📌 ESCOPO DO DESAFIO
-Neste desafio serão feitas as ingestões dos dados que estão na pasta /raw onde vamos ter alguns arquivos .csv de um banco relacional de vendas.
+Escopo: Ingestão de dados, processamento, modelagem dimensional, geração de relatório para analise.
+![Architecture-BronzeSilverGold](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/f52ebd61-38e7-42fc-bd11-c439012eceb0)
 
- - VENDAS.CSV
- - CLIENTES.CSV
- - ENDERECO.CSV
- - REGIAO.CSV
- - DIVISAO.CSV
+---
 
-Seu trabalho como engenheiro de dados/arquiteto de BI é prover dados em uma pasta desafio_curso/gold em .csv para ser consumido por um relatório em PowerBI que deverá ser construído dentro da pasta 'app' (já tem o template).
+## Modelagem relacional: Vendas, clientes, endereço, região, divisão.
+![desafio_curso_modelo_dados_relacional](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/b842ad6e-cba5-4e30-81a5-a80f73fe7b76)
 
-📑 ETAPAS
-Etapa 1 - Enviar os arquivos para o HDFS
-    - nesta etapa lembre de criar um shell script para fazer o trabalho repetitivo (não é obrigatório)
 
-Etapa 2 - Criar o banco DEASFIO_CURSO e dentro tabelas no Hive usando o HQL e executando um script shell dentro do hive server na pasta scripts/pre_process.
+## Modelagem dimensional: Vendas, Clientes, Tempo e Locadade.
+![desafio_curso_modelo_dados_dimensional](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/f0084192-dfd8-4a83-aee0-f28d81747888)
 
-    - DESAFIO_CURSO (nome do banco)
-        - TBL_VENDAS
-        - TBL_CLIENTES
-        - TBL_ENDERECO
-        - TBL_REGIAO
-        - TBL_DIVISAO
 
-Etapa 3 - Processar os dados no Spark Efetuando suas devidas transformações criando os arquivos com a modelagem de BI.
-OBS. o desenvolvimento pode ser feito no jupyter porem no final o codigo deve estar no arquivo desafio_curso/scripts/process/process.py
+## Ferramentas e tecnologias utilizadas:
+•	Git e Git Hub
+•	Docker e Docker Compose
+•	Shell Script
+•	Python
+•	HADOOP
+•	HDFS
+•	Hive
+•	HQL
+•	SPARK
+•	Jupyter Notebook
 
-Etapa 4 - Gravar as informações em tabelas dimensionais em formato cvs delimitado por ';'.
+![Diagrama_Fluxo_Dados](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/a48a5251-c28c-4a8f-8786-0030a207447d)
 
-        - FT_VENDAS
-        - DIM_CLIENTES
-        - DIM_TEMPO
-        - DIM_LOCALIDADE
-
-Etapa 5 - Exportar os dados para a pasta desafio_curso/gold
-
-Etapa 6 - Criar e editar o PowerBI com os dados que você trabalhou.
-
-No PowerBI criar gráficos de vendas.
-Etapa 7 - Criar uma documentação com os testes e etapas do projeto.
-
-REGRAS
-Campos strings vazios deverão ser preenchidos com 'Não informado'.
-Campos decimais ou inteiros nulos ou vazios, deversão ser preenchidos por 0.
-Atentem-se a modelagem de dados da tabela FATO e Dimensão.
-Na tabela FATO, pelo menos a métrica <b>valor de venda</b> é um requisito obrigatório.
-Nas dimensões deverá conter valores únicos, não deverá conter valores repetidos.
-para a dimensão tempo considerar o campo da TBL_VENDAS <b>Invoice Date</b>
-
-INSTRUÇÕES
-vocês deveram me entregar o projeto no github e por email (zip)
-meu email: cgomesf@minsait.com
-nome do email: DESAFIO MINSAIT BI/BIGDATA (Aluno)
-dentro deste email o zip e o link para o github onde estará o projeto.
-prazo limite: até <b>24/06/2023<b>
-Apos esta data não poderei considerar para a nota.
