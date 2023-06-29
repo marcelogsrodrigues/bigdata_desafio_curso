@@ -98,19 +98,19 @@ select distinct
     vd.salesprice       vr_unidade_venda,     
     vd.salesamount      vr_unidade_somada,    
     vd.salescostamount  vr_custo_venda,
-    vd.discountamount   vr_desconto,
+    coalesce(vd.discountamount,0) vr_desconto,
     vd.salesamountbasedonlistprice vr_venda_total,     
-    vd.invoicedate      dt_venda,
-    cl.customerkey      id_cliente,     
-    cl.customername     nm_cliente,
-    ed.addressnumber    id_endereco,   
-    ed.city             nm_cidade, 
-    ed.state            uf_estado,    
-    ed.country          sg_pais,
-    rg.regiaocode       id_regiao,     
-    rg.regiaoname       ds_regiao,
-    dv.divisao          id_divisao,    
-    dv.divisaoname      ds_divisao
+    vd.invoicedate dt_venda,
+    cl.customerkey id_cliente,     
+    cl.customername nm_cliente,
+    ed.addressnumber id_endereco,   
+    coalesce(ed.city, 'Nao Informado') nm_cidade, 
+    coalesce(ed.state, 'Nao Informado') uf_estado,    
+    coalesce(ed.country, 'Nao Informado') sg_pais,
+    coalesce(rg.regiaocode, 0) id_regiao,     
+    coalesce(rg.regiaoname'Nao Informado') ds_regiao,
+    coalesce(dv.divisao,0) id_divisao,    
+    coalesce(dv.divisaoname, 'Nao Informado')       ds_divisao
 from 
     venda as vd 
 inner join     
