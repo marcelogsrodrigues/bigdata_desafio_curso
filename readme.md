@@ -5,8 +5,6 @@ Proposta: Prover dados que permita a geração de relatorios gerencias.
 
 Escopo: Ingestão de dados, processamento, modelagem dimensional, geração de relatório para analise.
 
-![Architecture-BronzeSilverGold](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/f52ebd61-38e7-42fc-bd11-c439012eceb0)
-
 ---
 
 ## Modelagem relacional: Vendas, clientes, endereço, região, divisão.
@@ -77,4 +75,6 @@ Escopo: Ingestão de dados, processamento, modelagem dimensional, geração de r
 ![docker-desafio-curso-06-Power-BI-06-Relatorio-QuantidadeVendas](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/0a920f71-c11a-4d09-86b7-2bd9e584c4d7)
 
 .
+---
+![Architecture-BronzeSilverGold](https://github.com/marcelogsrodrigues/bigdata_desafio_curso/assets/134144307/f52ebd61-38e7-42fc-bd11-c439012eceb0)
 ---
